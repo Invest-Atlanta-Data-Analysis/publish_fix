@@ -1,0 +1,137 @@
+---
+title: "Invest Atlanta Impact Dashboard"
+subtitle: "2024 Data Year to Date"
+format: 
+  dashboard:
+    theme: cerulean
+---
+
+# Citywide Impact
+
+## Row {height="30%"}
+
+```{r, include = FALSE}
+# quarto publish gh-pages 
+library(tidyverse)
+library(dplyr)
+library(usethis)
+library(devtools)
+library(ggplot2)
+library(ggtext)
+library(ggrepel)
+library(ggthemes)
+library(extrafont)
+library(readxl)
+library(rmarkdown)
+library(prettydoc)
+library(knitr)
+library(kableExtra)
+library(sf)
+library(RefManageR)
+library(writexl)
+library(shiny)
+library(bslib)
+
+
+plot_theme <- function() {
+  font <- "Arial"
+  theme_minimal() %+replace%
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(color = "#28282D", linewidth = 0.3),
+    plot.title = element_text(
+      family = font,
+      size = 20,
+      face = "bold",
+      hjust = 0,
+      vjust = 2),
+    plot.subtitle = element_text(
+      family = font,
+      size = 12,
+      hjust = 0),
+    axis.title = element_text(
+      family = font,
+      size = 20),
+    axis.text = element_text(
+      family = font,
+      size = 14) ) 
+}
+
+
+```
+
+``` {r}
+#| content: valuebox
+#| title: "Total Capital Investment Across All Programs"
+list(
+  icon = "piggy-bank", 
+  color = "primary", 
+  value = "$458 Million"
+  )
+```
+
+```{r}
+#| content: valuebox
+#| title: "Total Economic Impact"
+list(
+  icon = "award-fill",
+  color = "success",
+  value = "$1.17 Billion"
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Total Capital Invested in Disinvested Neighborhoods"
+list(
+  icon = "globe-americas",
+  color = "primary",
+  value = "57%"
+)
+```
+
+``` {r}
+#| content: valuebox
+#| title: "Average Client Satisfaction Score (scale 1-5)"
+list(
+  icon = "file-person", 
+  color = "success", 
+  value = "4.65"
+  )
+```
+
+
+## Row {height="70%"}
+
+``` {r}
+#| title: "Total Capital Investment"
+
+tot_inv <- data.frame(name = c("2024 YTD", "2024 Goal"), inv = c(457659904.7, 1487100000))
+
+ce_events <- data.frame(name = c("2024 YTD", "2024 Goal"), people = c(4.65, 4.3))
+
+totinv_plot <- ggplot(tot_inv) +
+  geom_col(aes(x = name, y = inv, fill = name), color = "#000000", show.legend = FALSE) +
+  scale_x_discrete(name = " ", limits = c("2024 YTD", "2024 Goal")) +
+  scale_y_continuous(name = "$ Invested", limits = c(0,1500000000), 
+                     expand = c(0,0), labels = scales::comma) +
+  scale_fill_manual(values = c("#c8df8e", "#5e9732")) +
+  plot_theme()
+totinv_plot
+```
+
+
+
+``` {r}
+#| title: "Average Client Satisfaction Rating"
+events_plot <- ggplot(ce_events) +
+  geom_col(aes(x = name, y = people, fill = name), color = "#000000", show.legend = FALSE) +
+  scale_x_discrete(name = "Client Satisfaction", limits = c("2024 YTD", "2024 Goal")) +
+  scale_y_continuous(name = "Satisfaction Rating (1-5)", limits = c(0,5), 
+                     expand = c(0,0), labels = scales::comma) +
+  scale_fill_manual(values = c("#5e9732", "#c8df8e")) +
+  plot_theme()
+#events_plot
+```
+[![Click the image to explore our interactive online investment map.](wins_map_20240808_v2.png)](https://iatl.maps.arcgis.com/apps/instant/basic/index.html?appid=112649da7b1d4fa58098c16cc402dcc4){target="_blank"}
